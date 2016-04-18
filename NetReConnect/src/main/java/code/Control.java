@@ -25,6 +25,8 @@ public class Control
 		{
 			url=new URL("http://www.google.com");
 			HttpURLConnection urlConnect=(HttpURLConnection)url.openConnection();
+			Object objData=urlConnect.getContent();//this line returns error if connection is not present
+			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());			
 			/*
 			 * Commenting this code for optimization. Plan to replace with ping.
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
