@@ -11,8 +11,9 @@ public class Control
 	//make an URL to know source
 	private static URL url;
 	private static int INTERVAL=5*60*1000;
-	//Commands and connection activity status.
+	private static final String CONSTANT_URL="http://www.google.com";
 	
+	//Commands and connection activity status.
 	private static final String command="rasdial \"Vodafone Connection\" /PHONE:*99#";
 	private static boolean isAvailable;
 	/**
@@ -23,7 +24,7 @@ public class Control
 	{
 		try
 		{
-			url=new URL("http://www.google.com");
+			url=new URL(CONSTANT_URL);
 			HttpURLConnection urlConnect=(HttpURLConnection)url.openConnection();
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
 			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());			
