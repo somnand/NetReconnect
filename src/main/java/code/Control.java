@@ -1,8 +1,6 @@
 package code;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
@@ -20,7 +18,7 @@ public class Control
 	 * Method to identify the connection status. Dials google.com and confirms connectivity. 
 	 * @return true if connection is present or else false. 
 	 */
-	public static boolean isInternetReachable()throws MalformedURLException,IOException 
+	public static boolean isInternetReachable()throws IOException 
 	{
 		Runtime currentRuntime=Runtime.getRuntime();
 		Process pingProcess=currentRuntime.exec(PING_COMMAND);
@@ -36,8 +34,7 @@ public class Control
 		}
 		else
 		{
-			System.out.println("INTERNET CONNECTION NOT PRESENT : "+new Date());
-			reConnect();
+			System.out.println("INTERNET CONNECTION NOT PRESENT : "+new Date());			
 			return false;//returning false as Internet is not present
 		}		
 	}
@@ -92,8 +89,11 @@ public class Control
 				/*Adding the intelligent time control system */
 				if(isAvailable)
 					interval=5*60*1000;//5 mins
-				else 
+				else
+				{
+					reConnect(); 
 					interval=1*60*1000;//1 min
+				}					
 				//Suspending the main thread with specific interval
 				Thread.sleep(interval);
 			}
@@ -102,12 +102,7 @@ public class Control
 		{
 			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");
 			ie.printStackTrace();
-		}
-		catch(MalformedURLException mue)
-		{
-			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");
-			mue.printStackTrace();
-		}
+		}		
 		catch(IOException ioe)
 		{
 			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");	
