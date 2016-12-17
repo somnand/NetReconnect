@@ -10,41 +10,36 @@ public class Control
 {
 	//make an URL to know source
 	private static URL url;
-	private static int INTERVAL=5*60*1000;
-	private static final String CONSTANT_URL="http://www.google.com";
+	private static int interval=5*60*1000;
+	private static final String PING_COMMAND="ping -n 1 -w 5000 www.google.com";
 	
 	//Commands and connection activity status.
 	private static final String command="rasdial \"Vodafone Connection\" /PHONE:*99#";
 	private static boolean isAvailable;
 	/**
 	 * Method to identify the connection status. Dials google.com and confirms connectivity. 
-	 * @return true if connection is present or else false.
+	 * @return true if connection is present or else false. 
 	 */
-	public static boolean isInternetReachable()
+	public static boolean isInternetReachable()throws MalformedURLException,IOException 
 	{
-		try
+		Runtime currentRuntime=Runtime.getRuntime();
+		Process pingProcess=currentRuntime.exec(PING_COMMAND);
+		while(pingProcess.isAlive())
 		{
-			url=new URL(CONSTANT_URL);
-			HttpURLConnection urlConnect=(HttpURLConnection)url.openConnection();
-			Object objData=urlConnect.getContent();//this line returns error if connection is not present
-			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());			
-			/*
-			 * Commenting this code for optimization. Plan to replace with ping.
-			Object objData=urlConnect.getContent();//this line returns error if connection is not present
+			//asking process to finish
+		}
+		
+		if(pingProcess.exitValue()==0)
+		{
 			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());
-			*/
+			return true; //returning true as Internet is present
 		}
-		catch(MalformedURLException mue)
-		{
-			System.out.println("ERROR > Malformed URL :"+mue.getMessage());
-		}
-		catch(IOException ioe)
+		else
 		{
 			System.out.println("INTERNET CONNECTION NOT PRESENT : "+new Date());
 			reConnect();
-			return false;//returning false 
-		}				
-		return true;
+			return false;//returning false as Internet is not present
+		}		
 	}
 	
 	/**
@@ -96,16 +91,27 @@ public class Control
 				isAvailable=isInternetReachable();
 				/*Adding the intelligent time control system */
 				if(isAvailable)
-					INTERVAL=5*60*1000;//5 mins
+					interval=5*60*1000;//5 mins
 				else 
-					INTERVAL=1*60*1000;//1 min
+					interval=1*60*1000;//1 min
 				//Suspending the main thread with specific interval
-				Thread.sleep(INTERVAL);
+				Thread.sleep(interval);
 			}
 		}		
 		catch(InterruptedException ie)
 		{
-			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");			
+			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");
+			ie.printStackTrace();
+		}
+		catch(MalformedURLException mue)
+		{
+			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");
+			mue.printStackTrace();
+		}
+		catch(IOException ioe)
+		{
+			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");	
+			ioe.printStackTrace();
 		}
 	}
 }
