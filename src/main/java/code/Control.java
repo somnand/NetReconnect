@@ -18,15 +18,11 @@ public class Control
 	 * Method to identify the connection status. Dials google.com and confirms connectivity. 
 	 * @return true if connection is present or else false. 
 	 */
-	public static boolean isInternetReachable()throws IOException 
+	public static boolean isInternetReachable()throws IOException,InterruptedException 
 	{
 		Runtime currentRuntime=Runtime.getRuntime();
 		Process pingProcess=currentRuntime.exec(PING_COMMAND);
-		while(pingProcess.isAlive())
-		{
-			//asking process to finish
-		}
-		
+		pingProcess.waitFor();		
 		if(pingProcess.exitValue()==0)
 		{
 			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());
