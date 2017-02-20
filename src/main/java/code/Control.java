@@ -1,10 +1,14 @@
 package code;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 public class Control 
 {
@@ -12,6 +16,17 @@ public class Control
 	private static URL url;
 	private static int INTERVAL=5*60*1000;
 	private static final String CONSTANT_URL="http://www.google.com";
+	
+	//Engaging the logging system
+	public static Logger logger=Logger.getLogger(Control.class);
+	static{
+		//BasicConfigurator.configure();
+		//File configFile=new File("C:/Users/1021623/git/NetReconnect/src/main/resources/log4j_config.properties");
+		//System.out.println(configFile.exists());
+		String configFileName=System.getProperty("user.dir")+File.separator+"src/main/resources/"+"log4j_config.properties";
+		//PropertyConfigurator.configure("C:/Users/1021623/git/NetReconnect/src/main/resources/log4j_config.properties");
+		PropertyConfigurator.configure(configFileName);
+	}
 	
 	//Commands and connection activity status.
 	private static final String command="rasdial \"Vodafone Connection\" /PHONE:*99#";
@@ -27,20 +42,20 @@ public class Control
 			url=new URL(CONSTANT_URL);
 			HttpURLConnection urlConnect=(HttpURLConnection)url.openConnection();
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
-			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());			
+			logger.info("INTERNET CONNECTION PRESENT at "+new Date());			
 			/*
 			 * Commenting this code for optimization. Plan to replace with ping.
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
-			System.out.println("INTERNET CONNECTION PRESENT at "+new Date());
+			logger.info("INTERNET CONNECTION PRESENT at "+new Date());
 			*/
 		}
 		catch(MalformedURLException mue)
 		{
-			System.out.println("ERROR > Malformed URL :"+mue.getMessage());
+			logger.error("ERROR > Malformed URL :"+mue.getMessage());
 		}
 		catch(IOException ioe)
 		{
-			System.out.println("INTERNET CONNECTION NOT PRESENT : "+new Date());
+			logger.error("INTERNET CONNECTION NOT PRESENT : "+new Date());
 			reConnect();
 			return false;//returning false 
 		}				
@@ -57,7 +72,7 @@ public class Control
 		{
 			Process cmd;			
 			cmd=Runtime.getRuntime().exec(command);
-			System.out.println("Attempting to reconnect Vodafone Connection(Roaming). . . .");
+			logger.info("Attempting to reconnect Vodafone Connection(Roaming). . . .");
 			/*Adding the exitValue() to check for success for the connection*/
 			
 			try
@@ -71,16 +86,16 @@ public class Control
 			}
 			catch(IllegalThreadStateException itse)
 			{
-				System.out.println("ERROR : Thread in illegal state");
+				logger.error("ERROR : Thread in illegal state");
 			}
 			catch(InterruptedException ie)
 			{
-				System.out.println("ERROR : Thread Interrupted");
+				logger.error("ERROR : Thread Interrupted");
 			}			
 		}
 		catch(IOException ioe)
 		{
-			System.out.println("Error in Connecting the Internet");
+			logger.error("Error in Connecting the Internet");
 		}				
 	}	
 	/**
@@ -105,7 +120,7 @@ public class Control
 		}		
 		catch(InterruptedException ie)
 		{
-			System.out.println("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");			
+			logger.error("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");			
 		}
 	}
 }
