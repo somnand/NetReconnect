@@ -20,11 +20,7 @@ public class Control
 	//Engaging the logging system
 	public static Logger logger=Logger.getLogger(Control.class);
 	static{
-		//BasicConfigurator.configure();
-		//File configFile=new File("C:/Users/1021623/git/NetReconnect/src/main/resources/log4j_config.properties");
-		//System.out.println(configFile.exists());
-		String configFileName=System.getProperty("user.dir")+File.separator+"src/main/resources/"+"log4j_config.properties";
-		//PropertyConfigurator.configure("C:/Users/1021623/git/NetReconnect/src/main/resources/log4j_config.properties");
+		String configFileName=System.getProperty("user.dir")+File.separator+"src/main/resources/"+"log4j_config.properties";		
 		PropertyConfigurator.configure(configFileName);
 	}
 	
