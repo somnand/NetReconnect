@@ -20,7 +20,7 @@ public class Control
 	//Engaging the logging system
 	public static Logger logger=Logger.getLogger(Control.class);
 	static{
-		String configFileName=System.getProperty("user.dir")+File.separator+"src/main/resources/"+"log4j_config.properties";		
+		String configFileName="log4j.properties";
 		PropertyConfigurator.configure(configFileName);
 	}
 	

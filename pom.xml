@@ -20,6 +20,11 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<!-- Maven Compiler Plugin -->
 			<plugin>
@@ -30,7 +35,7 @@
 					<target>${java.version}</target>
 					<archive>
 						<manifest>
-							<!-- <addClasspath>true</addClasspath> -->
+							<addClasspath>true</addClasspath>
 							<!-- <classpathPrefix>lib/</classpathPrefix> -->
 							<mainClass>${java.main.class}</mainClass>
 						</manifest>
@@ -39,7 +44,20 @@
 			</plugin>
 			<!-- Maven Assembly plugin -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>				
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<finalName>${artifactId}-${version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifest>
+							<mainClass>${java.main.class}</mainClass>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
 				<executions>
 					<execution>
 						<id>make-assembly</id>
@@ -49,18 +67,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-				<finalName>${artifactId}-${version}</finalName>
-				<appendAssemblyId>false</appendAssemblyId>
-					<archive>
-						<manifest>
-							<mainClass>${java.main.class}</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>						
-					</descriptorRefs>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
