@@ -27,6 +27,10 @@ public class Control
 	//Commands and connection activity status.
 	private static final String command="rasdial \"Vodafone Connection\" /PHONE:*99#";
 	private static boolean isAvailable;
+	
+	//GlobalDynamicConstants fetched from messages property file.
+	private static GlobalDynamicConstants globalDynamicConstants=null;	
+	
 	/**
 	 * Method to identify the connection status. Dials google.com and confirms connectivity. 
 	 * @return true if connection is present or else false.
@@ -38,7 +42,7 @@ public class Control
 			url=new URL(CONSTANT_URL);
 			HttpURLConnection urlConnect=(HttpURLConnection)url.openConnection();
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
-			logger.info("INTERNET CONNECTION PRESENT at "+new Date());			
+			logger.info(globalDynamicConstants.getMessage("INFO_CONNECTION_PRESENT")+new Date());
 			/*
 			 * Commenting this code for optimization. Plan to replace with ping.
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
@@ -102,6 +106,7 @@ public class Control
 	{
 		try
 		{
+			globalDynamicConstants=new GlobalDynamicConstants("messages_en.properties");
 			while(true)
 			{
 				isAvailable=isInternetReachable();
@@ -113,10 +118,16 @@ public class Control
 				//Suspending the main thread with specific interval
 				Thread.sleep(INTERVAL);
 			}
-		}		
+		}
+		catch(IOException ioe)
+		{
+			logger.error("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");
+			logger.error(ioe.getMessage());
+		}
 		catch(InterruptedException ie)
 		{
-			logger.error("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");			
+			logger.error("CATASTROPHIC SYSTEM FAILURE\nClosing the application . .");
+			logger.error(ie.getMessage());
 		}
 	}
 }
