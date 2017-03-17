@@ -42,7 +42,7 @@ public class Control
 			url=new URL(CONSTANT_URL);
 			HttpURLConnection urlConnect=(HttpURLConnection)url.openConnection();
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
-			logger.info(globalDynamicConstants.getMessage("INFO_CONNECTION_PRESENT")+new Date());
+			logger.info(globalDynamicConstants.getMessage("INFO_CONNECTION_PRESENT")+new Date());			
 			/*
 			 * Commenting this code for optimization. Plan to replace with ping.
 			Object objData=urlConnect.getContent();//this line returns error if connection is not present
@@ -51,12 +51,12 @@ public class Control
 		}
 		catch(MalformedURLException mue)
 		{
-			logger.error("ERROR > Malformed URL :"+mue.getMessage());
+			logger.error(globalDynamicConstants.getMessage("ERROR_MALFORMED_URL")+mue.getMessage());
 		}
 		catch(IOException ioe)
 		{
-			logger.error("INTERNET CONNECTION NOT PRESENT : "+new Date());
-			reConnect();
+			logger.error(globalDynamicConstants.getMessage("INFO_CONNECTION_NOT_PRESENT")+new Date());
+			//reConnect();
 			return false;//returning false 
 		}				
 		return true;
@@ -72,7 +72,7 @@ public class Control
 		{
 			Process cmd;			
 			cmd=Runtime.getRuntime().exec(command);
-			logger.info("Attempting to reconnect Vodafone Connection(Roaming). . . .");
+			logger.info(globalDynamicConstants.getMessage("INFO_ATTEMPTING_TO_RECONNECT"));
 			/*Adding the exitValue() to check for success for the connection*/
 			
 			try
@@ -86,16 +86,16 @@ public class Control
 			}
 			catch(IllegalThreadStateException itse)
 			{
-				logger.error("ERROR : Thread in illegal state");
+				logger.error(globalDynamicConstants.getMessage("ERROR_ILLEGAL_THREAD_STATE"));
 			}
 			catch(InterruptedException ie)
 			{
-				logger.error("ERROR : Thread Interrupted");
+				logger.error(globalDynamicConstants.getMessage("ERROR_THREAD_INTERRUPTED"));
 			}			
 		}
 		catch(IOException ioe)
 		{
-			logger.error("Error in Connecting the Internet");
+			logger.error(globalDynamicConstants.getMessage("ERROR_GENERIC_INTERNET_NOT_CONNECTING"));
 		}				
 	}	
 	/**
@@ -114,7 +114,10 @@ public class Control
 				if(isAvailable)
 					INTERVAL=5*60*1000;//5 mins
 				else 
+				{
 					INTERVAL=1*60*1000;//1 min
+					reConnect();
+				}
 				//Suspending the main thread with specific interval
 				Thread.sleep(INTERVAL);
 			}

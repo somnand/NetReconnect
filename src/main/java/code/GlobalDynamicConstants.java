@@ -12,18 +12,20 @@ public final class GlobalDynamicConstants {
 	
 	public GlobalDynamicConstants(String messageFileName)throws IOException 
 	{
-		inStream=this.getClass().getClassLoader().getResourceAsStream(messageFileName);		
+		inStream=this.getClass().getClassLoader().getResourceAsStream(messageFileName);
+		if(inStream==null)
+			throw new FileNotFoundException("messages file is not found");
 	}
 	
-	public String getMessage(String messageKey)throws IOException
+	public String getMessage(String messageKey)
 	{
-		if(inStream!=null)
+		try
 		{
 			prop.load(inStream);			
 		}
-		else
+		catch(IOException ioe)
 		{
-			throw new FileNotFoundException("messages file is not found");			
+			return "Error in initialization messages files";
 		}
 		
 		if(prop.get(messageKey)!=null)
