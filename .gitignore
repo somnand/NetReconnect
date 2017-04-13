@@ -3,3 +3,5 @@
 /.settings
 /bin/
 /target/
+/applog.txt
+/NetReconnect_incremental_log.log
